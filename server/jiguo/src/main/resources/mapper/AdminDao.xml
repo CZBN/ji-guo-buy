@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.nnuzb.jiguo.dao.AdminDao">
+    <select id="selectByAdmin" parameterType="edu.nnuzb.jiguo.entity.Admin"
+            resultType="edu.nnuzb.jiguo.entity.Admin">
+        select id, name, password, state
+        from jg_admin
+        where name = #{name}
+          and password = md5(#{password}) and CAST(state AS SIGNED)>0
+    </select>
+
+    <select id="selectListByName" parameterType="string"
+            resultType="edu.nnuzb.jiguo.entity.User">
+        select id,phone,name,image,state
+        from jg_user
+        where name like concat('%',#{name},'%')
+    </select>
+
+    <select id="selectByName" parameterType="String"
+            resultType="edu.nnuzb.jiguo.entity.Admin">
+        select id, name, password, state
+        from jg_admin
+        where name = #{name}
+    </select>
+    
+    <select id="selectAll" resultType="edu.nnuzb.jiguo.entity.Admin">
+        select id, name, state
+        from jg_admin
+    </select>
+
+    <insert id="insert" parameterType="edu.nnuzb.jiguo.entity.Admin" useGeneratedKeys="true" keyProperty="id">
+        insert into jg_admin (name, password, state)
+        values (#{name}, md5(#{password}), 1)
+    </insert>
+    
+    <insert id="insertAdmin" parameterType="edu.nnuzb.jiguo.entity.Admin" useGeneratedKeys="true" keyProperty="id">
+        insert into jg_admin (name, password, state)
+        values (#{name}, md5(#{password}), #{state})
+    </insert>
+    
+    <update id="updateAdmin" parameterType="edu.nnuzb.jiguo.entity.Admin">
+        update jg_admin
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="password != null and password != ''">
+                password = md5(#{password}),
+            </if>
+            <if test="state != null">
+                state = #{state}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="updateState">
+        update jg_admin
+        set state=#{newState}
+        where id=#{id} and state=#{oldState}
+    </update>
+    
+    <delete id="deleteAdmin" parameterType="int">
+        delete from jg_admin where id = #{id}
+    </delete>
+</mapper>

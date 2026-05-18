@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.nnuzb.jiguo.dao.GuideItemDao">
+    <select id="selectByOrder" parameterType="map"
+            resultType="edu.nnuzb.jiguo.entity.vo.GuideItemVo">
+        SELECT 
+            jg_guide_item.id,
+            jg_guide_item.name,
+            jg_guide_item.image,
+            jg_guide_item.title,
+            jg_guide_item.price,
+            jg_guide_item.pub_date as pubDate,
+            0 AS thumbCount,
+            0 AS commentCount
+        FROM jg_guide_item
+        <choose>
+            <when test="order == 'hot'">
+                ORDER BY id DESC
+            </when>
+            <otherwise>
+                ORDER BY id DESC
+            </otherwise>
+        </choose>
+    </select>
+    
+    <!-- 根据ID查询导购商品 -->
+    <select id="selectById" parameterType="int" resultType="edu.nnuzb.jiguo.entity.GuideItem">
+        SELECT id, name, image, title, price, pub_date as pubDate
+        FROM jg_guide_item
+        WHERE id = #{id}
+    </select>
+    
+    <!-- 添加导购商品 -->
+    <insert id="insert" parameterType="edu.nnuzb.jiguo.entity.GuideItem" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO jg_guide_item (name, image, title, price, pub_date)
+        VALUES (#{name}, #{image}, #{title}, #{price}, #{pubDate})
+    </insert>
+    
+    <!-- 更新导购商品 -->
+    <update id="update" parameterType="edu.nnuzb.jiguo.entity.GuideItem">
+        UPDATE jg_guide_item
+        <set>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="image != null and image != ''">image = #{image},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="pubDate != null">pub_date = #{pubDate}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <!-- 删除导购商品 -->
+    <delete id="delete" parameterType="int">
+        DELETE FROM jg_guide_item WHERE id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.nnuzb.jiguo.dao.TryApplyDao">
+    <select id="selectCountByItemId" parameterType="int"
+            resultType="int">
+        select count(1)
+        from jg_try_apply
+        where item_id = #{itemId}
+    </select>
+</mapper>

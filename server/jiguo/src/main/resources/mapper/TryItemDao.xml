@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.nnuzb.jiguo.dao.TryItemDao">
+    <resultMap id="BaseMap" type="edu.nnuzb.jiguo.entity.TryItem">
+        <id property="id" column="id" />
+        <result property="title" column="title" />
+        <result property="image" column="image" />
+        <result property="quantity" column="quantity" />
+        <result property="price" column="price" />
+        <result property="category" column="category" />
+        <result property="beginDate" column="begin_date" />
+        <result property="endDate" column="end_date" />
+    </resultMap>
+    <resultMap id="VoMap" type="edu.nnuzb.jiguo.entity.vo.TryItemVo" extends="BaseMap">
+        <association property="applyCount" column="id"
+                     select="edu.nnuzb.jiguo.dao.TryApplyDao.selectCountByItemId"/>
+        <association property="reportCount" column="id"
+                     select="edu.nnuzb.jiguo.dao.TryReportDao.selectCountByItemId"/>
+    </resultMap>
+    <select id="selectByCategoryStatus" resultMap="VoMap">
+        SELECT * FROM jg_try_item
+        <where>
+            <if test="category == 'General Trial'">
+                category = 'General Trial'
+            </if>
+            <if test="category == 'Exclusive Trial'">
+                AND category = 'Exclusive Trial'
+            </if>
+
+            <if test="status == 'apply'">
+                AND CURDATE() &lt; begin_date
+            </if>
+            <if test="status == 'try'">
+                AND (CURDATE() BETWEEN begin_date AND end_date)
+            </if>
+            <if test="status == 'end'">
+                AND CURDATE() &gt; end_date
+            </if>
+        </where>
+        ORDER BY begin_date DESC
+    </select>
+</mapper>

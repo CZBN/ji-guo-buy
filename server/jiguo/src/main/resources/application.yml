@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: jiguo
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${JIGUO_DB_URL:jdbc:mysql://localhost:3306/jiguo?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true}
+    username: ${JIGUO_DB_USERNAME:root}
+    password: ${JIGUO_DB_PASSWORD:123456}
+  servlet:
+    multipart:
+      max-file-size: 4096000
+      max-request-size: 4096000
+
+server:
+  port: 8088
+  
+image:
+  upload:
+    path: ${JIGUO_IMAGE_UPLOAD_PATH:uploads/images/}
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: edu.nnuzb.jiguo.entity
+  
+pagehelper:
+  reasonable: true
+
+jiguo:
+  admin:
+    init-enabled: true
+    default-name: ${JIGUO_ADMIN_NAME:root}
+    default-password: ${JIGUO_ADMIN_PASSWORD:123456}
+
+logging:
+  level:
+    edu.nnuzb.jiguo: info

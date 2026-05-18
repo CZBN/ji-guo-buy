@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.nnuzb.jiguo.dao.UserDao">
+    <select id="selectByUser" parameterType="edu.nnuzb.jiguo.entity.User"
+        resultType="edu.nnuzb.jiguo.entity.User">
+        select id, phone, name, password, image, state
+        from jg_user
+        where phone = #{phone}
+          and password = md5(#{password}) and state = 1
+    </select>
+
+    <select id="selectByName" parameterType="string"
+            resultType="edu.nnuzb.jiguo.entity.User">
+        select id, phone, name, password, image, state
+        from jg_user
+        where name = #{name}
+    </select>
+
+    <select id="selectListByName" parameterType="string"
+            resultType="edu.nnuzb.jiguo.entity.User">
+        select id,phone,name,image,state
+        from jg_user
+        where name like concat('%',#{name},'%')
+    </select>
+
+    <update id="updateState">
+        update jg_user
+        set state=#{newState}
+        where id=#{id} and state=#{oldState}
+    </update>
+
+    <select id="selectByPhone" parameterType="string"
+            resultType="edu.nnuzb.jiguo.entity.User">
+        select id, phone, name, password, image, state
+        from jg_user
+        where phone = #{phone}
+    </select>
+
+    <insert id="insertUser" parameterType="edu.nnuzb.jiguo.entity.User"
+    keyProperty="id" useGeneratedKeys="true">
+        insert into jg_user (phone, name, password, image, state)
+        values (#{phone}, #{name}, md5(#{password}), #{image}, #{state})
+    </insert>
+
+
+</mapper>
